@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generación ECS - UCV</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Estilos -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(
+                135deg, 
+                rgba(28, 43, 123, 0.95) 0%,   /* Cobalto */
+                rgba(0, 144, 154, 0.9) 50%,   /* Cian / Turquesa */
+                rgba(245, 134, 32, 0.9) 100%  /* Naranja */
+            ),
+            url('Fondo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        h1 {
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #tab-nosotros i {
+            stroke-width: 2px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    
+</head>
+<body class="bg-white text-slate-900">
+
+    <!-- Navegación -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-4 cursor-pointer" onclick="showTab('inicio')">
+                    <img src="Generación ECS colores.png" class="w-auto h-10">
+                    <img src="Generación ECS letras.png" class="w-auto h-6">
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="showTab('inicio')" class="nav-link text-sm font-semibold text-slate-600 hover:text-[#F58620] transition-colors" data-tab="inicio">Inicio</button>
+                    <button onclick="showTab('nosotros')" class="nav-link text-sm font-semibold text-slate-600 hover:text-[#F58620] transition-colors" data-tab="nosotros">Nosotros</button>
+                    <button onclick="showTab('comunidad')" class="nav-link text-sm font-semibold text-slate-600 hover:text-[#F58620] transition-colors" data-tab="comunidad">Comunidad</button>
+                    <button onclick="showTab('recursos')" class="nav-link text-sm font-semibold text-slate-600 hover:text-[#F58620] transition-colors" data-tab="recursos">Recursos</button>
+                    <button onclick="showTab('contacto')" class="bg-[#F58620] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-orange-600 transition shadow-md shadow-orange-100">¡Súmate!</button>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-slate-900">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t p-4 space-y-4 shadow-xl">
+            <button onclick="showTab('inicio')" class="block w-full text-left px-4 py-2 font-medium">Inicio</button>
+            <button onclick="showTab('nosotros')" class="block w-full text-left px-4 py-2 font-medium">Nosotros</button>
+            <button onclick="showTab('comunidad')" class="block w-full text-left px-4 py-2 font-medium">Comunidad</button>
+            <button onclick="showTab('recursos')" class="block w-full text-left px-4 py-2 font-medium">Recursos</button>
+            <button onclick="showTab('contacto')" class="block w-full bg-[#F58620] text-white px-4 py-3 rounded-xl font-bold text-center">Atención al Estudiante</button>
+        </div>
+    </nav>
+
+    <!-- Contenido: Inicio -->
+    <div id="tab-inicio" class="tab-content active">
+        <header class="relative hero-gradient min-h-[85vh] flex items-center">
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+                <div class="max-w-2xl">
+                    <span class="inline-block px-4 py-1 rounded-full bg-white/10 text-white/90 border border-white/20 backdrop-blur-sm text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
+                        UCV • Escuela de Comunicación Social
+                    </span>
+                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                        Comunidad, <span class="text-[#F58620]">proyectos</span> y experiencias reales.
+                    </h1>
+                    <p class="text-lg md:text-xl mb-10 text-slate-300 leading-relaxed">
+                        Súmate y sé parte de algo más grande.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="showTab('contacto')" class="bg-[#F58620] px-8 py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition flex items-center justify-center gap-2">
+                            Contáctanos <i data-lucide="arrow-right"></i>
+                        </button>
+                        <button onclick="showTab('recursos')" class="bg-white/10 backdrop-blur-md border border-white/20 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition flex items-center justify-center gap-2">
+                            <i data-lucide="download"></i> Ver Recursos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Pilares -->
+        <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-16">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Nuestros Pilares</h2>
+                <div class="w-16 h-1.5 bg-[#F58620] rounded-full"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="reveal p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-2xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-orange-100 text-[#F58620] rounded-2xl flex items-center justify-center mb-6"><i data-lucide="megaphone"></i></div>
+                    <h3 class="text-xl font-bold mb-3">Representación</h3>
+                    <p class="text-slate-600">Defensa activa ante el Consejo de Escuela por tus derechos académicos.</p>
+                </div>
+                
+                <div class="reveal p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-2xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-orange-100 text-[#F58620] rounded-2xl flex items-center justify-center mb-6"><i data-lucide="graduation-cap"></i></div>
+                    <h3 class="text-xl font-bold mb-3">Academia</h3>
+                    <p class="text-slate-600">Material de estudio, talleres y formación profesional constante.</p>
+                </div>
+                
+                <div class="reveal p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-2xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-orange-100 text-[#F58620] rounded-2xl flex items-center justify-center mb-6"><i data-lucide="users"></i></div>
+                    <h3 class="text-xl font-bold mb-3">Comunidad</h3>
+                    <p class="text-slate-600">Recuperación de espacios y vida estudiantil en nuestra casa de estudios.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!--Por definir-->
+         <section class="py-24 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-[#F58620] font-bold tracking-widest uppercase text-xs">Gestión 2023-2024</span>
+                    <h2 class="text-4xl font-extrabold mt-4 mb-6">Hechos, no solo promesas.</h2>
+                    <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                        Nuestra misión es la transparencia. Aquí puedes consultar los avances de nuestra gestión y el estado de los proyectos vigentes.
+                    </p>
+                    <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#F58620]"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span class="text-slate-200">Recuperación de la Sala de Edición Audiovisual.</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#F58620]"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span class="text-slate-200">Alianza con 10 empresas para pasantías.</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#F58620]"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span class="text-slate-200">Digitalización del repositorio de guías.</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#F58620]"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span class="text-slate-200">Jornadas de limpieza de aulas.</span>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="reveal aspect-square rounded-3xl bg-[#F58620] p-8 flex flex-col justify-end transform transition-all duration-150 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20 cursor-default" 
+                        style="transition-delay: 100ms;">
+                        <span class="text-4xl font-bold">15+</span>
+                        <span class="text-sm opacity-80">Talleres realizados</span>
+                    </div>
+                    <div class="reveal aspect-square rounded-3xl bg-slate-800 p-8 flex flex-col justify-end mt-8 transform transition-all duration-150 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20 cursor-default"
+                        style="transition-delay: 200ms;">
+                        <span class="text-4xl font-bold">800+</span>
+                        <span class="text-sm opacity-80">Estudiantes atendidos</span>
+                    </div>
+                    <div class="reveal aspect-square rounded-3xl bg-slate-800 p-8 flex flex-col justify-end transform transition-all duration-150 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20 cursor-default"
+                        style="transition-delay: 300ms;">
+                        <span class="text-4xl font-bold">100%</span>
+                        <span class="text-sm opacity-80">Transparencia</span>
+                    </div>
+                    <div class="reveal aspect-square rounded-3xl bg-[#1C2B7BF2] p-8 flex flex-col justify-end mt-8 transform transition-all duration-150 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20 cursor-default"
+                        style="transition-delay: 400ms;">
+                        <span class="text-4xl font-bold">24/7</span>
+                        <span class="text-sm opacity-80">Atención digital</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Contenido: Nosotros -->
+    <div id="tab-nosotros" class="tab-content py-24">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-[#F58620] font-bold tracking-widest uppercase text-sm mb-4 block">Quiénes Somos</span>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
+                        Una generación comprometida con el <span class="text-[#00909A]">futuro</span> de la comunicación.
+                    </h2>
+                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                        Generación ECS nace en el corazón de la <strong>Universidad Central de Venezuela</strong> como un movimiento estudiantil dedicado a transformar la experiencia académica en la Escuela de Comunicación Social. 
+                    </p>
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                        No solo somos representantes; somos estudiantes que trabajan para recuperar espacios, digitalizar el conocimiento y construir una comunidad sólida en "la casa que vence las sombras".
+                    </p>
+                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border-l-4 border-[#F58620]">
+                        <i data-lucide="quote" class="text-[#F58620] w-8 h-8 opacity-50"></i>
+                        <p class="italic text-slate-700 font-medium">
+                            "Consolidar el legado es una tarea colectiva que nos invita a mirar hacia el futuro sin olvidar de dónde venimos."
+                        </p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                        <img src="Fondo.png" class="w-full h-full object-cover" alt="Comunidad ECS">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl hidden md:block border border-slate-100">
+                        <p class="text-3xl font-black text-slate-900">79 años</p>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-tighter">De historia en la ECS</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-50 py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-14 h-14 bg-orange-50 text-[#F58620] rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="target" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Nuestra Misión</h3>
+                        <p class="text-slate-600 leading-relaxed">
+                            Defender los derechos académicos de los estudiantes ante el Consejo de Escuela, promoviendo la transparencia, la formación profesional constante y la recuperación integral de nuestra infraestructura educativa.
+                        </p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-14 h-14 bg-cyan-50 text-[#00909A] rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="eye" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Nuestra Visión</h3>
+                        <p class="text-slate-600 leading-relaxed">
+                            Ser el referente de innovación y gestión estudiantil en la UCV, logrando una Escuela de Comunicación Social conectada con el mundo laboral y con una comunidad estudiantil activa, consciente y participativa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 py-20 text-white rounded-[3rem] mx-4 mb-24 shadow-2xl">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <span class="text-[#F58620] font-bold tracking-widest uppercase text-xs">Resultados Reales</span>
+                        <h3 class="text-3xl font-bold mt-4 mb-6">Nuestra Gestión en Números</h3>
+                        <p class="text-slate-400 mb-8">La transparencia es nuestro compromiso. Estos son los pilares que hemos fortalecido este año.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="check-circle-2" class="text-[#F58620] w-5 h-5"></i>
+                                <span>Sala de Edición Audiovisual Recuperada.</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="check-circle-2" class="text-[#F58620] w-5 h-5"></i>
+                                <span>Alianza de Pasantías con 10+ Agencias.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="reveal aspect-square rounded-3xl bg-[#F58620] p-6 flex flex-col justify-end transition-all duration-150 hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
+                            <span class="text-3xl font-bold">15+</span>
+                            <span class="text-xs opacity-90 uppercase font-bold tracking-tighter">Talleres</span>
+                        </div>
+                        <div class="reveal aspect-square rounded-3xl bg-slate-800 p-6 flex flex-col justify-end mt-6 transition-all duration-150 hover:-translate-y-1">
+                            <span class="text-3xl font-bold">800+</span>
+                            <span class="text-xs opacity-90 uppercase font-bold tracking-tighter">Atendidos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900 mb-4">Más que política, somos impacto.</h2>
+                <p class="text-slate-500 italic">Pequeñas acciones que generan grandes cambios en nuestra facultad.</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-slate-900 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                        <i data-lucide="recycle"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Ecología</h4>
+                    <p class="text-xs text-slate-500 mt-1 uppercase">Impacto Ambiental</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-slate-900 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                        <i data-lucide="library"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Academia</h4>
+                    <p class="text-xs text-slate-500 mt-1 uppercase">Recursos Gratuitos</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-slate-900 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                        <i data-lucide="heart"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Servicio</h4>
+                    <p class="text-xs text-slate-500 mt-1 uppercase">Atención 24/7</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-slate-900 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                        <i data-lucide="laptop"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Innovación</h4>
+                    <p class="text-xs text-slate-500 mt-1 uppercase">Digitalización ECS</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Contenido: Comunidad -->
+    <div id="tab-comunidad" class="tab-content py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+            <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Más que un movimiento, somos la Escuela.</h2>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto">Aquí registramos los avances de nuestra gestión y el día a día de quienes hacen vida en la ECS.</p>
+            <div class="w-24 h-1.5 bg-[#F58620] mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                
+                <div class="reveal md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-[2rem] bg-slate-200">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Evento Principal">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <p class="text-white font-bold text-xl">Asamblea Estudiantil 2024</p>
+                        <p class="text-orange-400 text-sm">Tu voz cuenta en el Consejo de Escuela</p>
+                    </div>
+                </div>
+
+                <div class="reveal md:row-span-2 relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 100ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Reciclaje">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <p class="text-white font-bold">Recicla en la ECS</p>
+                    </div>
+                </div>
+
+                <div class="reveal relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 200ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Taller">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <p class="text-white text-xs font-bold">Bululú</p>
+                    </div>
+                </div>
+
+                <div class="reveal relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 300ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Limpieza">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <p class="text-white text-xs font-bold">Mantenimiento de Áreas</p>
+                    </div>
+                </div>
+
+                <div class="reveal md:col-span-2 relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 400ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Grupo">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                        <p class="text-white font-bold uppercase tracking-widest text-xs">Comunidad Unida</p>
+                    </div>
+                </div>
+
+                <div class="reveal md:row-span-2 relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 500ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detalle 1">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                        <p class="text-white font-bold text-xs uppercase">Pasillos UCV</p>
+                    </div>
+                </div>
+
+                <div class="reveal md:row-span-2 relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 600ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detalle 2">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                        <p class="text-white font-bold text-xs uppercase">Estudio</p>
+                    </div>
+                </div>
+
+                <div class="reveal relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 700ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Actividad">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                        <p class="text-white font-bold">Talleres de Formación</p>
+                        <p class="text-orange-400 text-xs uppercase tracking-tighter">Impacto Académico</p>
+                    </div>
+                </div>
+
+                <div class="reveal relative group overflow-hidden rounded-[2rem] bg-slate-200" style="transition-delay: 800ms;">
+                    <img src="Fondo.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Evento Social">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                        <p class="text-white font-bold">Encuentro Generacional</p>
+                        <p class="text-orange-400 text-xs uppercase tracking-tighter">Comunidad ECS</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Contenido: Recursos -->
+    <div id="tab-recursos" class="tab-content py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-12">
+            <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Repositorio Académico</h2>
+            <div class="w-16 h-1.5 bg-[#F58620] rounded-full mb-6"></div>
+            <p class="text-lg text-slate-600">Busca material de estudio compartido por tus compañeros.</p>
+        </div>
+        
+        <div class="relative mb-12">
+            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="search-input" placeholder="Buscar por materia o título..." class="w-full pl-12 pr-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-[#F58620] shadow-inner text-slate-900">
+        </div>
+
+        <div id="resources-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dinámico con JS -->
+        </div>
+    </div>
+
+    <!-- Contenido: Contacto (Formulario con Google Cloud) -->
+    <div id="tab-contacto" class="tab-content py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-slate-900 rounded-[3rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row">
+            <div class="lg:w-1/2 p-12 lg:p-20 text-white flex flex-col justify-center">
+                <h2 class="text-4xl font-extrabold mb-8">Atención al Estudiante</h2>
+                <p class="text-slate-400 text-lg mb-12">Tus datos se guardan de forma segura en Google Cloud. Úsalo para reportar problemas o sumarte.</p>
+                
+                <div class="space-y-8">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-[#F58620]/20 text-orange-500 rounded-full flex items-center justify-center border border-[#F58620]/30"><i data-lucide="message-square"></i></div>
+                        <div><p class="text-sm text-slate-400 font-bold uppercase">Soporte</p><p class="text-xl">Respuesta rápida</p></div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-blue-600/20 text-blue-500 rounded-full flex items-center justify-center border border-blue-600/30"><i data-lucide="shield-check"></i></div>
+                        <div><p class="text-sm text-slate-400 font-bold uppercase">Privacidad</p><p class="text-xl">Datos Protegidos</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:w-1/2 bg-white p-12 lg:p-20">
+                <div id="form-wrapper">
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Nombre</label>
+                                <input type="text" id="name" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Cédula</label>
+                                <input type="text" id="id-card" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Motivo</label>
+                            <select id="reason" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]">
+                                <option>Problema Académico</option>
+                                <option>Denuncia Estudiantil</option>
+                                <option>Sumarse al Movimiento</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Mensaje</label>
+                            <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]"></textarea>
+                        </div>
+                        <button type="submit" id="submit-btn" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-xl flex items-center justify-center gap-2">
+                            <span>Enviar a Google Cloud</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div id="success-view" class="hidden text-center py-12">
+                    <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="check-circle" size="40"></i></div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">¡Recibido!</h3>
+                    <p class="text-slate-600">Tus datos han sido almacenados correctamente en Google Cloud.</p>
+                    <button onclick="resetForm()" class="mt-8 text-[#F58620] font-bold hover:underline">Enviar otro reporte</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-slate-100 py-16 text-center">
+        <div class="flex justify-center items-center space-x-2 mb-6">
+            <img src="https://drive.google.com/file/d/1U585TUg5i07cLn0R6seRSgfb2AW5Nf9J/view?usp=drive_link" class="w-auto h-20">
+        </div>
+        <p class="text-slate-500 text-sm">
+            Movimiento Estudiantil de la UCV. La casa que vence las sombras.
+        </p>
+
+        <div class="mt-12 flex justify-center space-x-8">
+            <a href="https://www.instagram.com/generacionecs" target="_blank" 
+            class="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-[#F58620] hover:text-white hover:scale-110 transition-all duration-300 border border-slate-100 shadow-md">
+                <i data-lucide="instagram" class="w-7 h-7"></i>
+            </a>
+        
+            <a href="https://www.whatsapp.com/channel/0029Vb7AMUhCcW4w89h3XK0S" target="_blank" 
+            class="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-[#25D366] hover:text-white hover:scale-110 transition-all duration-300 border border-slate-100 shadow-md">
+                <i data-lucide="message-circle" class="w-7 h-7"></i>
+            </a>
+        </div>
+
+        <p class="mt-12 text-[10px] text-slate-300 uppercase tracking-[0.2em] font-bold">
+            Conectamos la Escuela
+        </p>
+    </footer>
+
+    <!-- Firebase SDK (Google Services) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuración automática del entorno
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'generacion-ecs-web';
+
+        // Autenticación inicial de Google
+        signInAnonymously(auth).catch(err => console.error("Auth error:", err));
+
+        // Manejo del Formulario
+        const form = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formWrapper = document.getElementById('form-wrapper');
+        const successView = document.getElementById('success-view');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!auth.currentUser) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="animate-spin"></i> Guardando...`;
+            lucide.createIcons();
+
+            const data = {
+                nombre: document.getElementById('name').value,
+                cedula: document.getElementById('id-card').value,
+                motivo: document.getElementById('reason').value,
+                mensaje: document.getElementById('message').value,
+                timestamp: serverTimestamp(),
+                userId: auth.currentUser.uid
+            };
+
+            try {
+                // GUARDAR EN GOOGLE FIRESTORE (Siguiendo Regla 1 de rutas)
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'contactos'), data);
+                formWrapper.classList.add('hidden');
+                successView.classList.remove('hidden');
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Cloud Error:", err);
+                alert("Error al conectar con Google Cloud.");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Enviar a Google Cloud";
+            }
+        });
+
+        window.resetForm = () => {
+            form.reset();
+            formWrapper.classList.remove('hidden');
+            successView.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Enviar a Google Cloud";
+            lucide.createIcons();
+        };
+    </script>
+
+    <!-- Lógica de UI (Vanilla JS) -->
+    <script>
+        const recursos = [
+            { t: 'Guía Redacción I', c: 'Periodismo', i: 'file-text', l: 'https://www.youtube.com/watch?v=k3-VbHekdxE' },
+            { t: 'Calendario 2024-1', c: 'Oficial', i: 'calendar', l: 'https://www.youtube.com/watch?v=WdSGEvDGZAo&list=PLy0tzzdIA_JBPQre0idTQwyxb4sUZJgj5' },
+            { t: 'Pensum Vigente', c: 'Académico', i: 'book-open', l: 'https://www.youtube.com/watch?v=dZJ9_sgGXKg' },
+            { t: 'Teoría de Com.', c: 'Teoría', i: 'megaphone', l: 'https://www.youtube.com/watch?v=iVJaujA54Y8' },
+            { t: 'Manual Audiovisual', c: 'Audiovisual', i: 'camera', l: 'https://www.youtube.com/watch?v=mSTcXJbviAg' },
+            { t: 'Taller de Edición', c: 'Taller', i: 'edit-3', l: 'https://www.youtube.com/watch?v=jUpA6Xpv4cI&list=PLrdchmwbSFcVNBXouvnTcnqP5X6XL70Ql&index=1' },
+            { t: 'Guía Redacción II', c: 'Periodismo', i: 'file-text', l: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+            { t: 'Mapa de Pasantías', c: 'Oportunidades', i: 'briefcase', l: 'https://www.youtube.com/watch?v=bwq6pOleKHM' },
+            { t: 'Protocolo COVID-19', c: 'Salud', i: 'shield-check', l: 'https://www.youtube.com/watch?v=QV76zJjUpC4' }
+        ];
+
+        function showTab(id) {
+            // 1. Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            // 2. Quitar el estilo activo de todos los links
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('text-[#F58620]', 'font-bold'));
+            
+            // 3. MOSTRAR LA PESTAÑA SELECCIONADA (Cambiamos esta línea)
+            const targetTab = document.getElementById('tab-' + id);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // 4. Resaltar el link en el menú
+            const link = document.querySelector(`[data-tab="${id}"]`);
+            if (link) link.classList.add('text-[#F58620]', 'font-bold');
+
+            // 5. Scroll al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 6. Cerrar menú móvil si está abierto
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function renderRecursos(filter = '') {
+            const list = document.getElementById('resources-list');
+            list.innerHTML = '';
+
+            const filtrados = recursos.filter(r => r.t.toLowerCase().includes(filter.toLowerCase()));
+            
+            filtrados.forEach(r => {
+                list.innerHTML += `
+                    <div class="bg-white border border-slate-100 p-6 rounded-3xl hover:shadow-xl transition-all group">
+                        <div class="w-12 h-12 bg-slate-50 text-[#F58620] rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="${r.i}"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900">${r.t}</h4>
+                        <p class="text-sm text-slate-500 mb-4">${r.c}</p>
+                        
+                        <a href="${r.l}" 
+                        target="_blank" 
+                        download 
+                        class="inline-flex items-center gap-2 text-[#F58620] text-sm font-bold group-hover:gap-3 transition-all">
+                            Descargar <i data-lucide="download" size="14"></i>
+                        </a>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        document.getElementById('search-input')?.addEventListener('input', (e) => renderRecursos(e.target.value));
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderRecursos();
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Seleccionamos todos los elementos con la clase reveal
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
