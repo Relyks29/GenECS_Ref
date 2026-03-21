@@ -496,22 +496,24 @@
                 </div>
             </div>
 
+            <!-- Se debe cambiar la dirección de correo del formulario -->
             <div class="lg:w-1/2 bg-white p-12 lg:p-20">
                 <div id="form-wrapper">
-                    <form id="contact-form" class="space-y-6">
+                    <form id="contact-form" class="space-y-6"
+                        action="https://formsubmit.co/carloseduardodl29@gmail.com" method="POST">
                         <div class="grid sm:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-bold text-slate-700 mb-2">Nombre</label>
-                                <input type="text" id="name" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]">
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Nombre y apellido</label>
+                                <input type="text" id="name" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]" name="Nombre y apellido">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-slate-700 mb-2">Cédula</label>
-                                <input type="text" id="id-card" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]">
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Número de teléfono</label>
+                                <input type="number" id="id-card" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]" name="Número de teléfono">
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Motivo</label>
-                            <select id="reason" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]">
+                            <select id="reason" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]" name="Motivo">
                                 <option>Problema Académico</option>
                                 <option>Denuncia Estudiantil</option>
                                 <option>Sumarse al Movimiento</option>
@@ -519,7 +521,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Mensaje</label>
-                            <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]"></textarea>
+                            <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#F58620]" name="Mensaje"></textarea>
                         </div>
                         <button type="submit" id="submit-btn" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-xl flex items-center justify-center gap-2">
                             <span>Enviar a Google Cloud</span>
